@@ -1,0 +1,35 @@
+###########part1###########
+SELECT count(loanid), custid
+FROM all_loans
+GROUP BY custid
+
+###########part2###########
+SELECT custid
+FROM all_loans
+GROUP BY custid
+Having (DATEDIFF(max(approvedate), max(payoffdate))<=0 or DATEDIFF(max(approvedate), max(writeoffdate))<=0)
+
+###########part3-a###########
+SELECT custid, sum(amount_paid)
+FROM all_loans
+RIGHT JOIN all_loanhist
+on all_loans.loanid = all_loanhist.loanid
+GROUP BY custid
+Having eowdate <= DATEADD(month, 6, min(approvedate))
+
+###########part3-b###########
+SELECT custid, 
+       sum(principal_paid)/sum(amount)
+FROM all_loans
+RIGHT JOIN all_loanhist
+on all_loans.loanid = all_loanhist.loanid
+GROUP BY custid
+Having eowdate <= DATEADD(month, 6, min(approvedate))
+
+###########part4###########
+SELECT custid, sum(amount_paid)
+FROM all_loans
+RIGHT JOIN all_loanhist
+on all_loans.loanid = all_loanhist.loanid
+GROUP BY DATEPART(month, approvedate)
+Having eowdate <= DATEADD(month, 6, min(approvedate))
