@@ -1,5 +1,5 @@
 ###########part1###########
-SELECT count(loanid), custid
+SELECT custid, count(loanid)
 FROM all_loans
 GROUP BY custid
 
@@ -12,7 +12,7 @@ Having (DATEDIFF(max(approvedate), max(payoffdate))<=0 or DATEDIFF(max(approveda
 ###########part3-a###########
 SELECT custid, sum(amount_paid)
 FROM all_loans
-RIGHT JOIN all_loanhist
+JOIN all_loanhist
 on all_loans.loanid = all_loanhist.loanid
 GROUP BY custid
 Having eowdate <= DATEADD(month, 6, min(approvedate))
@@ -21,15 +21,15 @@ Having eowdate <= DATEADD(month, 6, min(approvedate))
 SELECT custid, 
        sum(principal_paid)/sum(amount)
 FROM all_loans
-RIGHT JOIN all_loanhist
+JOIN all_loanhist
 on all_loans.loanid = all_loanhist.loanid
 GROUP BY custid
 Having eowdate <= DATEADD(month, 6, min(approvedate))
 
 ###########part4###########
-SELECT custid, sum(amount_paid)
+SELECT CAST(count(*) AS float) / CAST(select count(distinct loanid) from all_loans AS float)
 FROM all_loans
-RIGHT JOIN all_loanhist
+JOIN all_loanhist
 on all_loans.loanid = all_loanhist.loanid
 GROUP BY DATEPART(month, approvedate)
 Having eowdate <= DATEADD(month, 6, min(approvedate))
